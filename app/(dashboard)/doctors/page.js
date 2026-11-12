@@ -31,6 +31,7 @@ export default function DoctorsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
 
@@ -64,6 +65,30 @@ export default function DoctorsPage() {
     loadDoctors();
   }, [loadDoctors]);
 
+  const resetForm = () => {
+    setForm(emptyForm);
+    setEditingId(null);
+    setShowForm(false);
+  };
+
+  const startCreate = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+    setShowForm(true);
+  };
+
+  const startEdit = (doctor) => {
+    setEditingId(doctor._id);
+    setForm({
+      name: doctor.name || "",
+      specialization: doctor.specialization || "",
+      hospital: doctor.hospital || "",
+      phone: doctor.phone || "",
+      email: doctor.email || "",
+    });
+    setShowForm(true);
+  };
+
   const handleFilterSubmit = (event) => {
     event.preventDefault();
     if (page === 1) {
@@ -73,19 +98,25 @@ export default function DoctorsPage() {
     }
   };
 
-  const handleCreate = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setSaving(true);
     setError("");
 
     try {
-      await api.post("/doctors", form);
-      setForm(emptyForm);
-      setShowForm(false);
-      setPage(1);
+      if (editingId) {
+        await api.put(`/doctors/${editingId}`, form);
+      } else {
+        await api.post("/doctors", form);
+        setPage(1);
+      }
+      resetForm();
       await loadDoctors();
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create doctor");
+      setError(
+        err.response?.data?.message ||
+          (editingId ? "Failed to update doctor" : "Failed to create doctor")
+      );
     } finally {
       setSaving(false);
     }
@@ -99,6 +130,7 @@ export default function DoctorsPage() {
 
     try {
       await api.delete(`/doctors/${id}`);
+      if (editingId === id) resetForm();
       await loadDoctors();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete doctor");
@@ -116,7 +148,7 @@ export default function DoctorsPage() {
         </div>
         <button
           type="button"
-          onClick={() => setShowForm((prev) => !prev)}
+          onClick={() => (showForm ? resetForm() : startCreate())}
           className="btn-primary w-full sm:w-auto"
         >
           {showForm ? "Close form" : "Add doctor"}
@@ -124,7 +156,10 @@ export default function DoctorsPage() {
       </div>
 
       {showForm ? (
-        <form onSubmit={handleCreate} className="panel grid gap-4 p-5 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="panel grid gap-4 p-5 sm:grid-cols-2">
+          <p className="text-sm font-semibold text-slate-800 sm:col-span-2">
+            {editingId ? "Edit doctor" : "Add doctor"}
+          </p>
           {Object.keys(emptyForm).map((field) => (
             <div key={field}>
               <label className="mb-1.5 block text-sm font-medium capitalize text-slate-700">
@@ -141,10 +176,19 @@ export default function DoctorsPage() {
               />
             </div>
           ))}
-          <div className="sm:col-span-2">
+          <div className="flex flex-col gap-2 sm:col-span-2 sm:flex-row">
             <button type="submit" disabled={saving} className="btn-primary">
-              {saving ? "Saving..." : "Save doctor"}
+              {saving
+                ? "Saving..."
+                : editingId
+                  ? "Update doctor"
+                  : "Save doctor"}
             </button>
+            {editingId ? (
+              <button type="button" onClick={resetForm} className="btn-secondary">
+                Cancel
+              </button>
+            ) : null}
           </div>
         </form>
       ) : null}
@@ -231,10 +275,17 @@ export default function DoctorsPage() {
                 <p>{doctor.phone}</p>
                 <p className="break-all">{doctor.email}</p>
               </div>
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 <Link href={`/doctors/${doctor._id}`} className="btn-secondary flex-1">
                   View
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => startEdit(doctor)}
+                  className="btn-secondary flex-1"
+                >
+                  Edit
+                </button>
                 <button
                   type="button"
                   onClick={() => handleDelete(doctor._id)}
@@ -287,13 +338,20 @@ export default function DoctorsPage() {
                     <td className="px-4 py-3 text-slate-600">{doctor.phone}</td>
                     <td className="px-4 py-3 text-slate-600">{doctor.email}</td>
                     <td className="px-4 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <Link
                           href={`/doctors/${doctor._id}`}
                           className="btn-secondary px-3 py-1.5 text-xs"
                         >
                           View
                         </Link>
+                        <button
+                          type="button"
+                          onClick={() => startEdit(doctor)}
+                          className="btn-secondary px-3 py-1.5 text-xs"
+                        >
+                          Edit
+                        </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(doctor._id)}
