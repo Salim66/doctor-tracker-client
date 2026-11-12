@@ -107,14 +107,14 @@ export default function DoctorDetailPage() {
   }
 
   return (
-    <section>
-      <Link href="/doctors" className="text-sm text-teal-700 hover:underline">
+    <section className="space-y-6">
+      <Link href="/doctors" className="text-sm font-medium text-teal-700 hover:underline">
         Back to doctors
       </Link>
 
-      <div className="mt-4 rounded-xl border border-slate-200 bg-white p-5">
-        <h1 className="text-2xl font-semibold text-slate-800">{doctor.name}</h1>
-        <div className="mt-4 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+      <div className="panel p-5 sm:p-6">
+        <h1 className="page-title">{doctor.name}</h1>
+        <div className="mt-5 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
           <p>
             <span className="font-medium text-slate-700">Specialization:</span>{" "}
             {doctor.specialization}
@@ -134,10 +134,10 @@ export default function DoctorDetailPage() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-slate-800">Patients</h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <h2 className="text-xl font-semibold text-slate-900">Patients</h2>
+          <p className="page-subtitle">
             {pagination.total} patient{pagination.total === 1 ? "" : "s"} under
             this doctor
           </p>
@@ -145,7 +145,7 @@ export default function DoctorDetailPage() {
         <button
           type="button"
           onClick={() => setShowForm((prev) => !prev)}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800"
+          className="btn-primary w-full sm:w-auto"
         >
           {showForm ? "Close form" : "Add patient"}
         </button>
@@ -154,7 +154,7 @@ export default function DoctorDetailPage() {
       {showForm ? (
         <form
           onSubmit={handleAddPatient}
-          className="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2"
+          className="panel grid gap-3 p-5 sm:grid-cols-2"
         >
           <input
             required
@@ -163,7 +163,7 @@ export default function DoctorDetailPage() {
             onChange={(event) =>
               setForm((prev) => ({ ...prev, name: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <input
             required
@@ -174,14 +174,14 @@ export default function DoctorDetailPage() {
             onChange={(event) =>
               setForm((prev) => ({ ...prev, age: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <select
             value={form.gender}
             onChange={(event) =>
               setForm((prev) => ({ ...prev, gender: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -194,7 +194,7 @@ export default function DoctorDetailPage() {
             onChange={(event) =>
               setForm((prev) => ({ ...prev, phone: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <input
             required
@@ -203,12 +203,12 @@ export default function DoctorDetailPage() {
             onChange={(event) =>
               setForm((prev) => ({ ...prev, condition: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500 sm:col-span-2"
+            className="field sm:col-span-2"
           />
           <button
             type="submit"
             disabled={saving}
-            className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:opacity-70 sm:col-span-2 sm:w-fit"
+            className="btn-primary sm:col-span-2 sm:w-fit"
           >
             {saving ? "Saving..." : "Save patient"}
           </button>
@@ -216,12 +216,35 @@ export default function DoctorDetailPage() {
       ) : null}
 
       {error ? (
-        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
           {error}
         </p>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="space-y-3 md:hidden">
+        {patients.length === 0 ? (
+          <div className="panel p-5 text-sm text-slate-500">No patients yet</div>
+        ) : (
+          patients.map((patient) => (
+            <div key={patient._id} className="panel p-4">
+              <p className="font-semibold text-slate-900">{patient.name}</p>
+              <p className="mt-1 text-sm text-slate-500">{patient.condition}</p>
+              <p className="mt-3 text-sm text-slate-600">
+                {patient.gender} · Age {patient.age} · {patient.phone}
+              </p>
+              <button
+                type="button"
+                onClick={() => handleDeletePatient(patient._id)}
+                className="btn-danger mt-4"
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="panel hidden overflow-hidden md:block">
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-600">
@@ -257,7 +280,7 @@ export default function DoctorDetailPage() {
                       <button
                         type="button"
                         onClick={() => handleDeletePatient(patient._id)}
-                        className="rounded-md border border-red-200 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50"
+                        className="btn-danger"
                       >
                         Delete
                       </button>

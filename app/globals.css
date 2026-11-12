@@ -3,15 +3,54 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f4f7f8;
+  --foreground: #102a2e;
+  --brand: #0f766e;
+  --brand-dark: #0b5f59;
+  --panel: #ffffff;
+  --line: #e2e8f0;
+  --muted: #64748b;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14, 116, 144, 0.06), transparent 24%),
+    var(--background);
+  min-height: 100vh;
 }
 
 * {
   box-sizing: border-box;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.04)];
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-70;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center rounded-xl border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50;
+  }
+
+  .page-title {
+    @apply text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl;
+  }
+
+  .page-subtitle {
+    @apply mt-1 text-sm text-slate-500;
+  }
 }

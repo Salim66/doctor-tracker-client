@@ -18,8 +18,10 @@ export default function AuthGuard({ children }) {
 
   if (!ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">
-        Checking session...
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="panel px-6 py-5 text-sm text-slate-500">
+          Checking session...
+        </div>
       </div>
     );
   }

@@ -106,31 +106,28 @@ export default function DoctorsPage() {
   };
 
   return (
-    <section>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <section className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Doctors</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="page-title">Doctors</h1>
+          <p className="page-subtitle">
             {pagination.total} doctor{pagination.total === 1 ? "" : "s"} found
           </p>
         </div>
         <button
           type="button"
           onClick={() => setShowForm((prev) => !prev)}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800"
+          className="btn-primary w-full sm:w-auto"
         >
           {showForm ? "Close form" : "Add doctor"}
         </button>
       </div>
 
       {showForm ? (
-        <form
-          onSubmit={handleCreate}
-          className="mt-6 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2"
-        >
+        <form onSubmit={handleCreate} className="panel grid gap-4 p-5 sm:grid-cols-2">
           {Object.keys(emptyForm).map((field) => (
             <div key={field}>
-              <label className="mb-1 block text-sm font-medium capitalize text-slate-700">
+              <label className="mb-1.5 block text-sm font-medium capitalize text-slate-700">
                 {field}
               </label>
               <input
@@ -140,16 +137,12 @@ export default function DoctorsPage() {
                 onChange={(event) =>
                   setForm((prev) => ({ ...prev, [field]: event.target.value }))
                 }
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+                className="field"
               />
             </div>
           ))}
           <div className="sm:col-span-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:opacity-70"
-            >
+            <button type="submit" disabled={saving} className="btn-primary">
               {saving ? "Saving..." : "Save doctor"}
             </button>
           </div>
@@ -158,7 +151,7 @@ export default function DoctorsPage() {
 
       <form
         onSubmit={handleFilterSubmit}
-        className="mt-6 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-5"
+        className="panel grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-5"
       >
         <input
           placeholder="Search"
@@ -166,7 +159,7 @@ export default function DoctorsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, search: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <input
           placeholder="Specialization"
@@ -177,7 +170,7 @@ export default function DoctorsPage() {
               specialization: event.target.value,
             }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <input
           placeholder="Hospital"
@@ -185,7 +178,7 @@ export default function DoctorsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, hospital: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <input
           type="date"
@@ -193,7 +186,7 @@ export default function DoctorsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, startDate: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <input
           type="date"
@@ -201,23 +194,61 @@ export default function DoctorsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, endDate: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
-        <button
-          type="submit"
-          className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 md:col-span-5 md:w-fit"
-        >
+        <button type="submit" className="btn-secondary sm:col-span-2 lg:col-span-5 lg:w-fit">
           Apply filters
         </button>
       </form>
 
       {error ? (
-        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
           {error}
         </p>
       ) : null}
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="space-y-3 md:hidden">
+        {loading ? (
+          <div className="panel p-5 text-sm text-slate-500">Loading doctors...</div>
+        ) : doctors.length === 0 ? (
+          <div className="panel p-5 text-sm text-slate-500">No doctors found</div>
+        ) : (
+          doctors.map((doctor) => (
+            <div key={doctor._id} className="panel p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-slate-900">{doctor.name}</p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {doctor.specialization}
+                  </p>
+                </div>
+                <span className="rounded-full bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-700">
+                  Doctor
+                </span>
+              </div>
+              <div className="mt-4 space-y-1 text-sm text-slate-600">
+                <p>{doctor.hospital}</p>
+                <p>{doctor.phone}</p>
+                <p className="break-all">{doctor.email}</p>
+              </div>
+              <div className="mt-4 flex gap-2">
+                <Link href={`/doctors/${doctor._id}`} className="btn-secondary flex-1">
+                  View
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(doctor._id)}
+                  className="btn-danger"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="panel hidden overflow-hidden md:block">
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-600">
@@ -259,14 +290,14 @@ export default function DoctorsPage() {
                       <div className="flex gap-2">
                         <Link
                           href={`/doctors/${doctor._id}`}
-                          className="rounded-md border border-slate-200 px-2.5 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          className="btn-secondary px-3 py-1.5 text-xs"
                         >
                           View
                         </Link>
                         <button
                           type="button"
                           onClick={() => handleDelete(doctor._id)}
-                          className="rounded-md border border-red-200 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50"
+                          className="btn-danger"
                         >
                           Delete
                         </button>

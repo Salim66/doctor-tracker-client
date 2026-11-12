@@ -18,7 +18,7 @@ import {
 } from "recharts";
 import api from "@/lib/api";
 
-const COLORS = ["#0f766e", "#0369a1", "#b45309", "#be123c", "#7c3aed", "#15803d"];
+const COLORS = ["#0f766e", "#0369a1", "#b45309", "#be123c", "#0e7490", "#15803d"];
 
 export default function DashboardPage() {
   const [days, setDays] = useState(30);
@@ -52,7 +52,7 @@ export default function DashboardPage() {
 
   if (error && !stats) {
     return (
-      <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+      <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
         {error}
       </p>
     );
@@ -70,18 +70,18 @@ export default function DashboardPage() {
   }));
 
   return (
-    <section>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <section className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Dashboard</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Overview of doctors, patients, and trends
+          <h1 className="page-title">Dashboard</h1>
+          <p className="page-subtitle">
+            Overview of doctors, patients, and clinic trends
           </p>
         </div>
         <select
           value={days}
           onChange={(event) => setDays(Number(event.target.value))}
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field max-w-[180px]"
         >
           <option value={7}>Last 7 days</option>
           <option value={30}>Last 30 days</option>
@@ -90,53 +90,67 @@ export default function DashboardPage() {
       </div>
 
       {error ? (
-        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
           {error}
         </p>
       ) : null}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Total doctors</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-800">
-            {stats?.totals?.doctors ?? 0}
-          </p>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="panel overflow-hidden p-5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-slate-500">Total doctors</p>
+              <p className="mt-2 text-4xl font-semibold tracking-tight text-slate-900">
+                {stats?.totals?.doctors ?? 0}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-teal-50 px-3 py-2 text-xs font-semibold text-teal-700">
+              Staff
+            </div>
+          </div>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <p className="text-sm text-slate-500">Total patients</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-800">
-            {stats?.totals?.patients ?? 0}
-          </p>
+        <div className="panel overflow-hidden p-5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-slate-500">Total patients</p>
+              <p className="mt-2 text-4xl font-semibold tracking-tight text-slate-900">
+                {stats?.totals?.patients ?? 0}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700">
+              Records
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="text-base font-semibold text-slate-800">
+      <div className="grid gap-6 xl:grid-cols-2">
+        <div className="panel p-5">
+          <h2 className="text-base font-semibold text-slate-900">
             Patients per doctor
           </h2>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 min-h-[18rem] w-full">
             {patientsPerDoctor.length === 0 ? (
               <p className="text-sm text-slate-500">No patient data yet</p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={patientsPerDoctor}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} />
                   <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
                   <Tooltip />
-                  <Bar dataKey="patients" fill="#0f766e" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="patients" fill="#0f766e" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="text-base font-semibold text-slate-800">
+        <div className="panel p-5">
+          <h2 className="text-base font-semibold text-slate-900">
             New patients by date
           </h2>
-          <div className="mt-4 h-72">
+          <div className="mt-4 h-72 min-h-[18rem] w-full">
             {patientsByDate.length === 0 ? (
               <p className="text-sm text-slate-500">
                 No patients in the selected range
@@ -152,7 +166,7 @@ export default function DashboardPage() {
                     type="monotone"
                     dataKey="count"
                     stroke="#0369a1"
-                    strokeWidth={2}
+                    strokeWidth={3}
                     dot={{ r: 3 }}
                   />
                 </LineChart>
@@ -162,11 +176,11 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-base font-semibold text-slate-800">
+      <div className="panel p-5">
+        <h2 className="text-base font-semibold text-slate-900">
           Patients by condition
         </h2>
-        <div className="mt-4 h-80">
+        <div className="mt-4 h-80 min-h-[20rem] w-full">
           {patientsByCondition.length === 0 ? (
             <p className="text-sm text-slate-500">No condition data yet</p>
           ) : (

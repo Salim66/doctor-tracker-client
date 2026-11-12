@@ -142,17 +142,17 @@ export default function PatientsPage() {
   };
 
   return (
-    <section>
+    <section className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-800">Patients</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="page-title">Patients</h1>
+        <p className="page-subtitle">
           {pagination.total} patient{pagination.total === 1 ? "" : "s"} found
         </p>
       </div>
 
       <form
         onSubmit={handleFilterSubmit}
-        className="mt-6 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-5"
+        className="panel grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-5"
       >
         <input
           placeholder="Search"
@@ -160,7 +160,7 @@ export default function PatientsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, search: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <input
           placeholder="Condition"
@@ -168,14 +168,14 @@ export default function PatientsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, condition: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <select
           value={filters.doctor}
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, doctor: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         >
           <option value="">All doctors</option>
           {doctors.map((doctor) => (
@@ -190,7 +190,7 @@ export default function PatientsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, startDate: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
         <input
           type="date"
@@ -198,12 +198,9 @@ export default function PatientsPage() {
           onChange={(event) =>
             setFilters((prev) => ({ ...prev, endDate: event.target.value }))
           }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+          className="field"
         />
-        <button
-          type="submit"
-          className="rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 md:col-span-5 md:w-fit"
-        >
+        <button type="submit" className="btn-secondary sm:col-span-2 lg:col-span-5 lg:w-fit">
           Apply filters
         </button>
       </form>
@@ -211,9 +208,9 @@ export default function PatientsPage() {
       {editingId ? (
         <form
           onSubmit={handleUpdate}
-          className="mt-6 grid gap-3 rounded-xl border border-teal-100 bg-teal-50/40 p-4 sm:grid-cols-2"
+          className="panel grid gap-3 border-teal-100 bg-teal-50/40 p-5 sm:grid-cols-2"
         >
-          <p className="sm:col-span-2 text-sm font-medium text-slate-700">
+          <p className="text-sm font-semibold text-slate-800 sm:col-span-2">
             Edit patient
           </p>
           <input
@@ -223,7 +220,7 @@ export default function PatientsPage() {
             onChange={(event) =>
               setEditForm((prev) => ({ ...prev, name: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <input
             required
@@ -234,14 +231,14 @@ export default function PatientsPage() {
             onChange={(event) =>
               setEditForm((prev) => ({ ...prev, age: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <select
             value={editForm.gender}
             onChange={(event) =>
               setEditForm((prev) => ({ ...prev, gender: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -254,7 +251,7 @@ export default function PatientsPage() {
             onChange={(event) =>
               setEditForm((prev) => ({ ...prev, phone: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <input
             required
@@ -266,7 +263,7 @@ export default function PatientsPage() {
                 condition: event.target.value,
               }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           />
           <select
             required
@@ -274,7 +271,7 @@ export default function PatientsPage() {
             onChange={(event) =>
               setEditForm((prev) => ({ ...prev, doctor: event.target.value }))
             }
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500"
+            className="field"
           >
             <option value="">Select doctor</option>
             {doctors.map((doctor) => (
@@ -283,19 +280,11 @@ export default function PatientsPage() {
               </option>
             ))}
           </select>
-          <div className="flex gap-2 sm:col-span-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:opacity-70"
-            >
+          <div className="flex flex-col gap-2 sm:col-span-2 sm:flex-row">
+            <button type="submit" disabled={saving} className="btn-primary">
               {saving ? "Saving..." : "Update patient"}
             </button>
-            <button
-              type="button"
-              onClick={cancelEdit}
-              className="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-600 hover:bg-white"
-            >
+            <button type="button" onClick={cancelEdit} className="btn-secondary">
               Cancel
             </button>
           </div>
@@ -303,12 +292,74 @@ export default function PatientsPage() {
       ) : null}
 
       {error ? (
-        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
           {error}
         </p>
       ) : null}
 
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="space-y-3 md:hidden">
+        {loading ? (
+          <div className="panel p-5 text-sm text-slate-500">Loading patients...</div>
+        ) : patients.length === 0 ? (
+          <div className="panel p-5 text-sm text-slate-500">No patients found</div>
+        ) : (
+          patients.map((patient) => (
+            <div key={patient._id} className="panel p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-slate-900">{patient.name}</p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {patient.condition}
+                  </p>
+                </div>
+                <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-700">
+                  {patient.gender}
+                </span>
+              </div>
+              <div className="mt-4 space-y-1 text-sm text-slate-600">
+                <p>Age: {patient.age}</p>
+                <p>
+                  Doctor:{" "}
+                  {patient.doctor?._id ? (
+                    <Link
+                      href={`/doctors/${patient.doctor._id}`}
+                      className="font-medium text-teal-700"
+                    >
+                      {patient.doctor.name}
+                    </Link>
+                  ) : (
+                    "—"
+                  )}
+                </p>
+                <p>
+                  Created:{" "}
+                  {patient.createdAt
+                    ? new Date(patient.createdAt).toLocaleDateString()
+                    : "—"}
+                </p>
+              </div>
+              <div className="mt-4 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => startEdit(patient)}
+                  className="btn-secondary flex-1"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(patient._id)}
+                  className="btn-danger"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="panel hidden overflow-hidden md:block">
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-600">
@@ -325,19 +376,13 @@ export default function PatientsPage() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-8 text-center text-slate-500"
-                  >
+                  <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
                     Loading patients...
                   </td>
                 </tr>
               ) : patients.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-8 text-center text-slate-500"
-                  >
+                  <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
                     No patients found
                   </td>
                 </tr>
@@ -348,9 +393,7 @@ export default function PatientsPage() {
                       {patient.name}
                     </td>
                     <td className="px-4 py-3 text-slate-600">{patient.age}</td>
-                    <td className="px-4 py-3 text-slate-600">
-                      {patient.gender}
-                    </td>
+                    <td className="px-4 py-3 text-slate-600">{patient.gender}</td>
                     <td className="px-4 py-3 text-slate-600">
                       {patient.condition}
                     </td>
@@ -376,14 +419,14 @@ export default function PatientsPage() {
                         <button
                           type="button"
                           onClick={() => startEdit(patient)}
-                          className="rounded-md border border-slate-200 px-2.5 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          className="btn-secondary px-3 py-1.5 text-xs"
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(patient._id)}
-                          className="rounded-md border border-red-200 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50"
+                          className="btn-danger"
                         >
                           Delete
                         </button>
