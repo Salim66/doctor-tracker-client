@@ -91,21 +91,25 @@ The PDF asks for visual analytics. Recharts is lightweight and fits the required
 
 ## Visual Evidence
 
-Place screenshots in `public/screenshots/` before submission:
+### Desktop
 
-- `desktop-dashboard.png`
-- `desktop-doctors.png`
-- `mobile-login.png`
-- `mobile-patients.png`
+![Desktop login](public/screenshots/desktop-login.png)
 
-Then reference them here:
-
-```md
 ![Desktop dashboard](public/screenshots/desktop-dashboard.png)
+
 ![Desktop doctors](public/screenshots/desktop-doctors.png)
+
+![Desktop patients](public/screenshots/desktop-patients.png)
+
+### Mobile
+
 ![Mobile login](public/screenshots/mobile-login.png)
+
+![Mobile dashboard](public/screenshots/mobile-dashboard.png)
+
+![Mobile doctors](public/screenshots/mobile-doctors.png)
+
 ![Mobile patients](public/screenshots/mobile-patients.png)
-```
 
 ## Scripts
 
