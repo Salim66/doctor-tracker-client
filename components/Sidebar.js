@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { clearAuth, getUser } from "@/lib/auth";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -11,6 +12,13 @@ const links = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const user = getUser();
+
+  const handleLogout = () => {
+    clearAuth();
+    router.replace("/login");
+  };
 
   return (
     <aside className="flex w-56 flex-col border-r border-slate-200 bg-white">
@@ -39,6 +47,22 @@ export default function Sidebar() {
           );
         })}
       </nav>
+
+      <div className="border-t border-slate-200 p-4">
+        <p className="truncate text-sm font-medium text-slate-700">
+          {user?.name || "Admin"}
+        </p>
+        <p className="truncate text-xs text-slate-500">
+          {user?.email || ""}
+        </p>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="mt-3 w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-50"
+        >
+          Logout
+        </button>
+      </div>
     </aside>
   );
 }
